@@ -7,20 +7,9 @@
 
 include $(GOROOT)/src/Make.inc
 
-TARG=container
+TARG=bucket
 GOFILES=\
-        container.go\
+        bucket.go\
 
 include $(GOROOT)/src/Make.pkg
 
-bucket:
-	cd bucket && gomake
-
-bucketclean:
-	cd bucket && gomake clean
-
-bucketinstall:
-	cd bucket && gomake install
-
-bucketnuke:
-	cd bucket && gomake nuke
