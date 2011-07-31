@@ -21,10 +21,24 @@ type Bucket struct {
 
 func New(n int) *Bucket {
     b := new(Bucket)
-    b.bucket = make(chan int, n)
     b.elems = make([]Elem, n)
     b.held = make([]bool, n)
+    b.bucket = make(chan int, n)
+    for i := 0; i < n; i++ {
+        b.bucket<-i
+    }
     return b
+}
+
+func (b *Bucket) Init(f func(int) interface{}) {
+    for _, p := range b.held {
+        if p {
+            panic("held")
+        }
+    }
+    for i, _ := range b.elems {
+        b.elems[i] = Elem{i, f(i)}
+    }
 }
 
 func (b *Bucket) Size() int {
@@ -46,6 +60,6 @@ func (b *Bucket) Release(i int) {
     if !b.held[i] {
         panic("free")
     }
-    b.bucket<-i
+    b.bucket <- i
     b.held[i] = false
 }
